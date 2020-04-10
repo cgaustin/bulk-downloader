@@ -26,12 +26,12 @@ This software is preliminary or provisional and is subject to revision. It is be
 ## Install
 * Install with pip automatically:
 ```
-pip install git+https://github.com/USGS-EROS/espa-bulk-downloader.git
+pip install git+https://code.usgs.gov/espa/bulk-downloader.git
 download_espa_order.py -h
 ```
 * Clone this repository:
 ```
-git clone https://github.com/USGS-EROS/espa-bulk-downloader.git bulk-downloader
+git clone https://code.usgs.gov/espa/bulk-downloader.git bulk-downloader
 cd bulk-downloader
 python ./download_espa_order.py -h
 ```
@@ -50,6 +50,8 @@ Argument | Description
 `-c or --checksum` | Download checksum files
 `-r or --retry` | Retry instead of skipping failed files
 `-n or --no-order-directories` | Store all files in one directory
+`-v or --verbose` | Be vocal about process
+`-i or --host` | If host downloading from is not https://espa.cr.usgs.gov 
 
 > Linux/Mac Example: `python ./download_espa_order.py -d /some/directory/with/free/space -u your_username`
 
@@ -69,6 +71,6 @@ Also please do not schedule execution more frequently than
 once per hour.
 
 
-[1]: https://github.com/USGS-EROS/espa-bulk-downloader/archive/master.zip
+[1]: https://code.usgs.gov/espa/bulk-downloader/-/archive/master/bulk-downloader-master.zip
 [2]: mailto:custserv@usgs.gov
 [3]: https://github.com/requests/requests

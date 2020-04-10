@@ -5,18 +5,6 @@ Purpose: A simple python client that will download all available (completed) sce
          a user order(s).
 
 Requires: Standard Python installation. (can also use requests)
-
-Changes:
-
-23 May 2018: Adam J. Stewart suggestion/adds new CLI options for retries and directory control
-31 Jan 2017: Updated HTTPS support for python 2.7 series (allow using requests library)
-20 June 2017: Woodstonelee added option to download checksum and error handling on bad urls
-30 June 2016: Guy Serbin added support for Python 3.x and download progress indicators.
-24 August 2016: Guy Serbin added:
-1. The downloads will now tell you which file number of all available scenes is being downloaded.
-2. Added a try/except clause for cases where the remote server closes the connection during a download.
-23 September 2016: Converted to using the ESPA API proper rather than relying on the RSS feed
-
 """
 import argparse
 import base64
@@ -42,10 +30,14 @@ try:
 except ImportError:
     requests = None
 
-__version__ = '2.2.5'
+def get_version():
+    with open("version.txt") as f:
+        return f.read().strip()
+
+version = get_version() 
 LOGGER = logging.getLogger(__name__)
 USERAGENT = ('EspaBulkDownloader/{v} ({s}) Python/{p}'
-             .format(v=__version__, s=platform.platform(aliased=True),
+             .format(v=version, s=platform.platform(aliased=True),
                      p=platform.python_version()))
 
 
@@ -355,7 +347,8 @@ if __name__ == '__main__':
                         help="be vocal about process")
 
     parser.add_argument("-i", "--host",
-                        required=False)
+                        required=False,
+                        help="if host is not USGS ESPA")
 
     parser.add_argument("-c", '--checksum',
                         required=False,

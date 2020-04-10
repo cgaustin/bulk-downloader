@@ -13,7 +13,7 @@ setup(
     # Application author details:
     author='USGS EROS ESPA',
 
-    license=open('UNLICENSE').read(),
+    license=open('LICENSE').read(),
 
     description='Client for downloading ESPA scenes.',
     long_description=open('README.md').read(),
