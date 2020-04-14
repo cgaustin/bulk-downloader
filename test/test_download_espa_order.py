@@ -2,6 +2,10 @@ import re
 import unittest
 from mock import patch
 import download_espa_order as deo
+import urllib
+import requests
+import requests_mock
+
 
 class TestDownloadEspaOrder(unittest.TestCase):
 
@@ -12,16 +16,19 @@ class TestDownloadEspaOrder(unittest.TestCase):
 class TestHTTPSHandler(unittest.TestCase):
 
     def setUp(self):
-        pass
+        self.handler = deo.HTTPSHandler(host="http://foo.gov")
 
     def tearDown(self):
-        pass
+        handler = None
+        #pass
 
     def test_auth(self):
-        pass
-    
+        self.handler.auth('bilbo', 'baggins')
+        self.assertTrue(type(self.handler.opener) == urllib.request.OpenerDirector)
+
+    @requests_mock.mock()
     def test_get(self):
-        pass
+        
 
     def test_download_bytes(self):
         pass
