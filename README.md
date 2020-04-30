@@ -68,6 +68,9 @@ please take care to ensure only 1 instance runs at a time.
 Also please do not schedule execution more frequently than
 once per hour.
 
+# Running espa_bulk_downloader tests
+python -m unittest test/test_download_espa_order.py
+
 
 [1]: https://code.usgs.gov/espa/bulk-downloader/-/archive/master/bulk-downloader-master.zip
 [2]: mailto:custserv@usgs.gov
