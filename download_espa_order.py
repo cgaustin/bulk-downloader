@@ -217,7 +217,7 @@ def main(username, email, order, target_directory, password=None, host=None, ver
 
 
 if __name__ == '__main__':
-    epilog = ('ESPA Bulk Download Client Version 1.0.0. [Tested with Python 2.7]\n'
+    epilog = ('ESPA Bulk Download Client Version 3.0.0. [Tested with Python 3.6]\n'
               'Retrieves all completed scenes for the user/order\n'
               'and places them into the target directory.\n'
               'Scenes are organized by order.\n\n'
@@ -234,7 +234,7 @@ if __name__ == '__main__':
               'Examples:\n'
               '------------\n'
               'Linux/Mac: ./download_espa_order.py -e your_email@server.com -o ALL -d /some/directory/with/free/space\n\n'
-              'Windows:   C:\python27\python download_espa_order.py -e your_email@server.com -o ALL -d C:\some\directory\with\\free\space'
+              'Windows:   C:\python36\python download_espa_order.py -e your_email@server.com -o ALL -d C:\some\directory\with\\free\space'
               '\n ')
 
     parser = argparse.ArgumentParser(epilog=epilog, formatter_class=argparse.RawDescriptionHelpFormatter)
