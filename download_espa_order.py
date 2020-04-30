@@ -18,17 +18,10 @@ import json
 import hashlib
 import logging
 from getpass import getpass
+import urllib.request as ul
+import requests
 
-if sys.version_info[0] == 3:
-    import urllib.request as ul
-else:
-    import urllib2 as ul
-
-try:
-    import requests
-    logging.getLogger("urllib3").setLevel(logging.WARNING)
-except ImportError:
-    requests = None
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 def get_version():
     with open("version.txt") as f:
@@ -39,71 +32,6 @@ LOGGER = logging.getLogger(__name__)
 USERAGENT = ('EspaBulkDownloader/{v} ({s}) Python/{p}'
              .format(v=version, s=platform.platform(aliased=True),
                      p=platform.python_version()))
-
-
-class HTTPSHandler(object):
-    """ Python standard library TLS-secured HTTP/REST communications """
-    def _set_ssl_context(self):
-        try:
-            from ssl import SSLContext, PROTOCOL_TLSv1_2
-        except ImportError:
-            msg = ('Cannot import SSL, HTTPS will not work. '
-                   'Try `pip install requests` on Python < 2.7.9')
-            raise ImportError(msg)
-        else:
-            self.context = SSLContext(PROTOCOL_TLSv1_2)
-
-    def __init__(self, host=''):
-        self.host = host
-        self._set_ssl_context()
-        self.handler = ul.HTTPSHandler(context=self.context)
-        self.opener = ul.build_opener(self.handler)
-        self.opener.addheaders = [('User-Agent', USERAGENT)]
-
-    def auth(self, username, password):
-        auth_handler = ul.HTTPBasicAuthHandler()
-        auth_handler.add_password(realm='Authentication Required',
-                                  uri=self.host, user=username,
-                                  passwd=password)
-        self.opener = ul.build_opener(auth_handler, self.handler)
-        self.opener.addheaders = [('User-Agent', USERAGENT)]
-
-    def get(self, uri, data=None):
-        body = (json.dumps(data) if data else '').encode('ascii')
-        request = ul.Request(self.host + uri)
-        request.get_method = lambda: 'GET'
-        response = self.opener.open(request, data=body)
-        return json.loads(response.read().decode())
-
-    def _download_bytes(self, full_url, first_byte, tmp_scene_path):
-        request = ul.Request(full_url)
-        request.headers['Range'] = 'bytes={}-'.format(first_byte)
-
-        with open(tmp_scene_path, 'ab') as target:
-            source = self.opener.open(request)
-            shutil.copyfileobj(source, target)
-
-        return os.path.getsize(tmp_scene_path)
-
-    def download(self, uri, target_path, verbose=False):
-        request = ul.Request(self.host + uri)
-        request.get_method = lambda: 'HEAD'
-
-        head = self.opener.open(request)
-
-        file_size = int(head.headers['Content-Length'])
-
-        first_byte, tmp_scene_path = 0, target_path + '.part'
-        if os.path.exists(tmp_scene_path):
-            first_byte = os.path.getsize(tmp_scene_path)
-
-        while first_byte < file_size:
-            first_byte = self._download_bytes(self.host + uri, first_byte, tmp_scene_path)
-
-        if first_byte >= file_size:
-            os.rename(tmp_scene_path, target_path)
-        return target_path
-
 
 class RequestsHandler(object):
 
@@ -155,10 +83,7 @@ class RequestsHandler(object):
 
 class Api(object):
     def __init__(self, username, password, host):
-        if requests:
-            self.handler = RequestsHandler(host)
-        else:
-            self.handler = HTTPSHandler(host)
+        self.handler = RequestsHandler(host)
         self.handler.auth(username, password)
 
     def api_request(self, endpoint, data=None):
@@ -208,18 +133,12 @@ class Scene(object):
 
     def __init__(self, srcurl):
         self.srcurl = srcurl
-
-        parts = self.srcurl.split("/")
-        self.orderid = parts[4]
-        self.filename = parts[-1]
+        self.orderid = self.srcurl.split("/")[4]
+        self.filename = self.srcurl.split("/")[-1]
         self.name = self.filename.split('.tar.gz')[0]
-
-    @classmethod
-    def checksum(cls):
-        cls.srcurl = str(cls.srcurl).replace('.tar.gz', '.md5')
-        cls.filename = cls.filename.replace('.tar.gz', '.md5')
-        cls.name = '%s MD5 checksum' % cls.name
-        return cls
+        self.cksum_url = self.srcurl.replace('.tar.gz', '.md5')
+        self.cksum_file = self.filename.replace('.tar.gz', '.md5')
+        self.cksum_name = '%s MD5 checksum' % self.name
 
 
 class LocalStorage(object):
@@ -228,10 +147,7 @@ class LocalStorage(object):
         self.basedir = basedir
         self.no_order_directories = no_order_directories
         self.verbose = verbose
-        if requests:
-            self.handler = RequestsHandler()
-        else:
-            self.handler = HTTPSHandler()
+        self.handler = RequestsHandler()
 
     def directory_path(self, scene):
         if self.no_order_directories:
@@ -246,6 +162,9 @@ class LocalStorage(object):
     def scene_path(self, scene):
         return os.path.join(self.directory_path(scene), scene.filename)
 
+    def cksum_path(self, scene):
+        return os.path.join(self.directory_path(scene), scene.cksum_file)
+
     def is_stored(self, scene):
         return os.path.exists(self.scene_path(scene))
 
@@ -259,8 +178,7 @@ class LocalStorage(object):
             try:
                 self.handler.download(scene.srcurl, self.scene_path(scene), self.verbose)
                 if checksum:
-                    scene = scene.checksum()
-                    self.handler.download(scene.srcurl, self.scene_path(scene), self.verbose)
+                    self.handler.download(scene.cksum_url, self.cksum_path(scene), self.verbose)
                 return
             except Exception as exc:
                 LOGGER.error('Scene not reachable at %s (%s)', scene.srcurl, exc)

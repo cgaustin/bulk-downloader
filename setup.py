@@ -20,7 +20,6 @@ setup(
 
     classifiers = [
         'Programming Language :: Python',
-        'Programming Langauge :: Python :: 2.7',
         'Programming Langauge :: Python :: 3.x',
         'Topic :: Scientific/Engineering :: GIS'
     ],
@@ -36,5 +35,5 @@ setup(
         ],
 
     # Supported Python versions
-    python_requires='>=2.7',
+    python_requires='>=3.6',
 )

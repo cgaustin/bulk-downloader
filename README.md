@@ -17,10 +17,8 @@ This software is preliminary or provisional and is subject to revision. It is be
 
 ## Requirements
 
-* Python Version >= 2.7.9 (required for HTTPS)
-* Note:
-  * These were tested with both python 2.7.14 and 3.6.4.
-  * For Python Version >= 2.6.0, the [requests][3] library must be installed.
+* Python Version >= 3.6.4
+* the Requests library: https://pypi.org/project/requests/
 
 
 ## Install
@@ -55,7 +53,7 @@ Argument | Description
 
 > Linux/Mac Example: `python ./download_espa_order.py -d /some/directory/with/free/space -u your_username`
 
-> Windows Example: `C:\python27\python download_espa_order.py -d C:\some\directory\with\free\space -u your_username`
+> Windows Example: `C:\python36\python download_espa_order.py -d C:\some\directory\with\free\space -u your_username`
 
 # Notes
 Retrieves all completed scenes for the user/order
