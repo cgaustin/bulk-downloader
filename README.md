@@ -71,6 +71,10 @@ once per hour.
 # Running espa_bulk_downloader tests
 python -m unittest test/test_download_espa_order.py
 
+# References:
+* IPDS Identifier: IP-117063 
+* [ESPA Order Bulk Downloader Digital Object Identifier 10.5066/P9YBPYAR](https://doi.org/10.5066/P9YBPYAR)
+
 
 [1]: https://code.usgs.gov/espa/bulk-downloader/-/archive/master/bulk-downloader-master.zip
 [2]: mailto:custserv@usgs.gov
