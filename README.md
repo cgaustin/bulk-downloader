@@ -17,21 +17,19 @@ This software is preliminary or provisional and is subject to revision. It is be
 
 ## Requirements
 
-* Python Version >= 2.7.9 (required for HTTPS)
-* Note:
-  * These were tested with both python 2.7.14 and 3.6.4.
-  * For Python Version >= 2.6.0, the [requests][3] library must be installed.
+* Python Version >= 3.6.4
+* the Requests library: https://pypi.org/project/requests/
 
 
 ## Install
 * Install with pip automatically:
 ```
-pip install git+https://github.com/USGS-EROS/espa-bulk-downloader.git
+pip install git+https://code.usgs.gov/espa/bulk-downloader.git
 download_espa_order.py -h
 ```
 * Clone this repository:
 ```
-git clone https://github.com/USGS-EROS/espa-bulk-downloader.git bulk-downloader
+git clone https://code.usgs.gov/espa/bulk-downloader.git bulk-downloader
 cd bulk-downloader
 python ./download_espa_order.py -h
 ```
@@ -50,10 +48,12 @@ Argument | Description
 `-c or --checksum` | Download checksum files
 `-r or --retry` | Retry instead of skipping failed files
 `-n or --no-order-directories` | Store all files in one directory
+`-v or --verbose` | Be vocal about process
+`-i or --host` | If host downloading from is not https://espa.cr.usgs.gov 
 
 > Linux/Mac Example: `python ./download_espa_order.py -d /some/directory/with/free/space -u your_username`
 
-> Windows Example: `C:\python27\python download_espa_order.py -d C:\some\directory\with\free\space -u your_username`
+> Windows Example: `C:\python36\python download_espa_order.py -d C:\some\directory\with\free\space -u your_username`
 
 # Notes
 Retrieves all completed scenes for the user/order
@@ -68,7 +68,14 @@ please take care to ensure only 1 instance runs at a time.
 Also please do not schedule execution more frequently than
 once per hour.
 
+# Running espa_bulk_downloader tests
+python -m unittest test/test_download_espa_order.py
 
-[1]: https://github.com/USGS-EROS/espa-bulk-downloader/archive/master.zip
+# References:
+* IPDS Identifier: IP-117063 
+* [ESPA Order Bulk Downloader Digital Object Identifier 10.5066/P9YBPYAR](https://doi.org/10.5066/P9YBPYAR)
+
+
+[1]: https://code.usgs.gov/espa/bulk-downloader/-/archive/master/bulk-downloader-master.zip
 [2]: mailto:custserv@usgs.gov
 [3]: https://github.com/requests/requests
