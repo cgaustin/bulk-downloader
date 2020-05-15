@@ -3,7 +3,7 @@
     "name": "bulk-downloader",
     "organization": "U.S. Geological Survey",
     "description": "Utility for downloading completed order products from the EROS Science Processing Architecture - ESPA",
-    "version": "3.0.0"
+    "version": "3.0.0",
     "status": "Production",
     "permissions": {
       "usageType": "openSource",
